@@ -47,9 +47,9 @@
 			<property name="jakarta.persistence.jdbc.driver"
 				value="com.mysql.cj.jdbc.Driver" />
 			<property name="jakarta.persistence.jdbc.url"
-				value="jdbc:mysql://localhost/mydatabase" />
-			<property name="jakarta.persistence.jdbc.user" value="tlc" />
-			<property name="jakarta.persistence.jdbc.password" value="tlc" />
+				value="jdbc:mysql://localhost/tp1sir" />
+			<property name="jakarta.persistence.jdbc.user" value="sir" />
+			<property name="jakarta.persistence.jdbc.password" value="sir" />
 			<property
 				name="jakarta.persistence.schema-generation.database.action"
 				value="update" />
