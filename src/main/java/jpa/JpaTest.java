@@ -38,7 +38,7 @@ public class JpaTest {
 		System.out.println(".. done");
 	}
 
-//	private static void createEmployees() {
+//	private static void create() {
 //		int numOfEmployees = manager.createQuery("Select a From Employee a", Event.class).getResultList().size();
 //		if (numOfEmployees == 0) {
 //			Department department = new Department("java");

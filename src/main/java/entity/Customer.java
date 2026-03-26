@@ -36,6 +36,7 @@ public class Customer extends User {
     public void setTickets(List<Ticket> tickets) {
         this.tickets = tickets;
     }
+
     @OneToMany(mappedBy =  "customer", cascade = CascadeType.PERSIST)
     public List<Ticket> getTickets() {
         return tickets;

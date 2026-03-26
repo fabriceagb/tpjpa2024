@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-public class Manager {
+public class Manager extends User {
     @EmbeddedId
     private Long id;
     List<Artist> artists  = new ArrayList<Artist>();

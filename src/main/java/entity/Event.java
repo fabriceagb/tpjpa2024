@@ -16,7 +16,7 @@ public class Event {
     private double price;
     private String musicalType;
     private int popularity;
-//    private Manager manager;
+    private Manager manager;
     private List<Ticket> tickets = new ArrayList<Ticket>();
 
     public Event() {
@@ -84,15 +84,15 @@ public class Event {
         this.popularity = popularity;
     }
 
-//    @ManyToOne
-//    public Manager getManager() {
-//        return manager;
-//    }
-//
-//    public void setManager(Manager manager) {
-//        this.manager = manager;
-//    }
-//
+    @ManyToOne
+    public Manager getManager() {
+        return manager;
+    }
+
+    public void setManager(Manager manager) {
+        this.manager = manager;
+    }
+
     @OneToMany(mappedBy = "event",  cascade = CascadeType.PERSIST)
     public List<Ticket> getTickets() {
         return tickets;
