@@ -2,12 +2,13 @@ package entity;
 
 import jakarta.persistence.*;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 @Entity
-public class Event {
+public class Event  implements Serializable {
     private Long id;
     private String label;
     private String description;

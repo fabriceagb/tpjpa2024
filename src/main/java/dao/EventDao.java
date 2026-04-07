@@ -1,6 +1,13 @@
 package dao;
 
-public class EventDao {
+import dao.generic.AbstractJpaDao;
+import entity.Event;
+
+public class EventDao extends AbstractJpaDao<Long, Event> {
+    public EventDao(){
+        super();
+    }
+
 }
 
 
