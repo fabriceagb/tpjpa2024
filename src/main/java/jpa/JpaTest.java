@@ -1,15 +1,18 @@
 package jpa;
 
 
+import io.undertow.Undertow;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
-
-import java.util.List;
+import org.jboss.resteasy.plugins.server.undertow.UndertowJaxrsServer;
+import java.util.logging.Logger;
 
 public class JpaTest {
 
 
 	private static EntityManager manager;
+	private static final Logger logger = Logger.getLogger(JpaTest.class.getName());
+
 
 	public JpaTest(EntityManager manager) {
 		this.manager = manager;
@@ -18,22 +21,30 @@ public class JpaTest {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-			EntityManager manager = EntityManagerHelper.getEntityManager();
 
-		JpaTest test = new JpaTest(manager);
+		/*
+		 * Creation de l'entityManager et creation des tables dans la base
+		 */
+		EntityManager manager = EntityManagerHelper.getEntityManager();
 
 		EntityTransaction tx = manager.getTransaction();
-		tx.begin();
-		try {
 
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		tx.commit();
-
-			
-   	 manager.close();
+   	 	manager.close();
 		EntityManagerHelper.closeEntityManagerFactory();
-		System.out.println(".. done");
+
+		UndertowJaxrsServer ut = new UndertowJaxrsServer();
+
+		EntityManagerHelper.TestApplication ta = new EntityManagerHelper.TestApplication();
+
+		ut.deploy(ta);
+
+		ut.start(
+				Undertow.builder()
+						.addHttpListener(8080, "localhost")
+
+		);
+
+		logger.info("JAX-RS based micro-service running!");
 	}
+
 }
