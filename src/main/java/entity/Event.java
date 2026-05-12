@@ -8,17 +8,24 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
+@NamedQueries({
+    @NamedQuery(name = "Event.findAll", query = "SELECT e FROM Event e"),
+    @NamedQuery(name = "Event.findUpcoming", query = "SELECT e FROM Event e WHERE e.date >= CURRENT_DATE"),
+    @NamedQuery(name = "Event.findByLocation", query = "SELECT e FROM Event e WHERE e.location = :location"),
+    @NamedQuery(name = "Event.findByCategory", query = "SELECT e FROM Event e WHERE e.categoryEvent.id = :categoryId"),
+    @NamedQuery(name = "Event.findByManager", query = "SELECT e FROM Event e WHERE e.manager.id = :managerId")
+})
 public class Event  implements Serializable {
     private Long id;
     private String label;
     private String description;
     private String location;
-    private Date date;
     private double price;
-    private String musicalType;
+    private Date date;
     private int popularity;
     private Manager manager;
     private List<Ticket> tickets = new ArrayList<Ticket>();
+    private CategoryEvent categoryEvent;
 
     public Event() {
 
@@ -73,14 +80,6 @@ public class Event  implements Serializable {
         return popularity;
     }
 
-    public String getMusicalType() {
-        return musicalType;
-    }
-
-    public void setMusicalType(String musicalType) {
-        this.musicalType = musicalType;
-    }
-
     public void setPopularity(int popularity) {
         this.popularity = popularity;
     }
@@ -101,5 +100,14 @@ public class Event  implements Serializable {
 
     public void setTickets(List<Ticket> tickets) {
         this.tickets = tickets;
+    }
+
+    @ManyToOne
+    public CategoryEvent getCategoryEvent() {
+        return this.categoryEvent;
+    }
+
+    public void setCategoryEvent(CategoryEvent categoryEvent) {
+        this.categoryEvent = categoryEvent;
     }
 }

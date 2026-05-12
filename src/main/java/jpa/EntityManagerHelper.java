@@ -6,6 +6,8 @@ import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 import jakarta.ws.rs.ApplicationPath;
 import jakarta.ws.rs.core.Application;
+import ressources.CategoryEventRessource;
+import ressources.EventRessource;
 import ressources.SwaggerResource;
 import ressources.UserRessource;
 
@@ -66,9 +68,9 @@ public class EntityManagerHelper {
 
             clazzes.add(OpenApiResource.class);
             clazzes.add(UserRessource.class);
+            clazzes.add(CategoryEventRessource.class);
+            clazzes.add(EventRessource.class);
             clazzes.add(SwaggerResource.class);
-    //        clazzes.add(AcceptHeaderOpenApiResource.class);
-
 
             return clazzes;
         }

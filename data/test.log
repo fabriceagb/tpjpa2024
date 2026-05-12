@@ -1,2 +1,236 @@
+/*C1*/SET SCHEMA SYSTEM_LOBS
+INSERT INTO BLOCKS VALUES(0,2147483647,0)
+COMMIT
+/*C2*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C3*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C5*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C6*/SET SCHEMA PUBLIC
+create sequence Account_SEQ start with 1 increment by 50
+create sequence Artist_SEQ start with 1 increment by 50
+create sequence CategoryEvent_SEQ start with 1 increment by 50
+create sequence Event_SEQ start with 1 increment by 50
+create sequence Ticket_SEQ start with 1 increment by 50
+create sequence User_SEQ start with 1 increment by 50
+create table Account (customer_id bigint, bic varchar(255), iban varchar(255), id varchar(255) not null, primary key (id))
+create table Administrator (id bigint not null, primary key (id))
+create table Artist (id bigint not null, manager_id bigint, email varchar(255), firstName varchar(255), lastName varchar(255), primary key (id))
+create table CategoryEvent (id bigint not null, libelle varchar(255), primary key (id))
+create table Customer (id bigint not null, primary key (id))
+create table Event (popularity integer not null, price float(53) not null, categoryEvent_id bigint, date timestamp(6), id bigint not null, manager_id bigint, description varchar(255), label varchar(255), location varchar(255), musicalType varchar(255), primary key (id))
+create table Manager (id bigint not null, primary key (id))
+create table Ticket (price float(53) not null, customer_id bigint, event_id bigint, id bigint not null, number varchar(255), primary key (id))
+create table User (id bigint not null, email varchar(255), firstName varchar(255), lastName varchar(255), password varchar(255), role varchar(255), primary key (id))
+alter table Account add constraint FKfhh6otya6l3sdh1v6jut588tf foreign key (customer_id) references Customer
+alter table Administrator add constraint FK7ap0h0uimnjjtludqk6gggpgy foreign key (id) references User
+alter table Artist add constraint FKbtdifogs8tt9xc7ti1bylndfx foreign key (manager_id) references Manager
+alter table Customer add constraint FKb4lp4g96o4g0qdwo5p87kl4sw foreign key (id) references User
+alter table Event add constraint FKp6n25qa6ahk3a5yl8o8soeqq4 foreign key (categoryEvent_id) references CategoryEvent
+alter table Event add constraint FKbqogctkwfjtvoat44hp4edfmd foreign key (manager_id) references Manager
+alter table Manager add constraint FKmt69a5398qo3npkrka1n0haux foreign key (id) references User
+alter table Ticket add constraint FKapfvsrtph7xc0vlx863ueppy6 foreign key (customer_id) references Customer
+alter table Ticket add constraint FKsotv3qctce5ggaewd002dd71s foreign key (event_id) references Event
+DISCONNECT
+/*C4*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C9*/SET SCHEMA PUBLIC
+DISCONNECT
 /*C8*/SET SCHEMA PUBLIC
 DISCONNECT
+/*C10*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C11*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C13*/SET SCHEMA PUBLIC
+INSERT INTO CATEGORYEVENT VALUES(1,'Concert & Musique')
+ALTER SEQUENCE PUBLIC.CATEGORYEVENT_SEQ RESTART WITH 51
+COMMIT
+INSERT INTO CATEGORYEVENT VALUES(2,'Conf\u00e9rence & Business')
+ALTER SEQUENCE PUBLIC.CATEGORYEVENT_SEQ RESTART WITH 101
+COMMIT
+INSERT INTO CATEGORYEVENT VALUES(3,'Formation & Atelier')
+COMMIT
+INSERT INTO CATEGORYEVENT VALUES(4,'Spectacle & Art')
+COMMIT
+INSERT INTO CATEGORYEVENT VALUES(5,'Sport & E-sport')
+COMMIT
+INSERT INTO CATEGORYEVENT VALUES(6,'Webinaire & En ligne')
+COMMIT
+INSERT INTO CATEGORYEVENT VALUES(7,'Networking & Rencontres')
+COMMIT
+/*C12*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C13*/DISCONNECT
+/*C14*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C15*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C16*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C17*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C18*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C19*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C20*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C21*/SET SCHEMA PUBLIC
+INSERT INTO CATEGORYEVENT VALUES(52,'Musique')
+ALTER SEQUENCE PUBLIC.CATEGORYEVENT_SEQ RESTART WITH 151
+COMMIT
+DISCONNECT
+/*C22*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C23*/SET SCHEMA PUBLIC
+DELETE FROM CATEGORYEVENT WHERE ID=1
+INSERT INTO CATEGORYEVENT VALUES(1,'Musique')
+COMMIT
+INSERT INTO CATEGORYEVENT VALUES(102,'Dance et Spectacle')
+ALTER SEQUENCE PUBLIC.CATEGORYEVENT_SEQ RESTART WITH 201
+COMMIT
+DELETE FROM CATEGORYEVENT WHERE ID=1
+COMMIT
+DISCONNECT
+/*C25*/SET SCHEMA PUBLIC
+INSERT INTO CATEGORYEVENT VALUES(152,'Concert & Musique')
+ALTER SEQUENCE PUBLIC.CATEGORYEVENT_SEQ RESTART WITH 251
+COMMIT
+/*C24*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C25*/DISCONNECT
+/*C26*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C27*/SET SCHEMA PUBLIC
+INSERT INTO USER VALUES(1,'agbjeff@gmail.com','Fabrice','AGBO','$2a$10$aVHNLkxJx1tREd4xvHBxCuQ8Zy5ZDbIN30036k9bb7KpW2cpr267.','USER_CUSTOMER')
+INSERT INTO CUSTOMER VALUES(1)
+ALTER SEQUENCE PUBLIC.USER_SEQ RESTART WITH 51
+COMMIT
+INSERT INTO USER VALUES(2,'setondjifabriceagbo@gmail.com','Fabrice','AGBO','$2a$10$MPnSz0vWLxYfKbZkdaCV1O13LyUsq6tVM//A3BliiN3Yfl6SDMtp.','USER_MANAGER')
+INSERT INTO MANAGER VALUES(2)
+ALTER SEQUENCE PUBLIC.USER_SEQ RESTART WITH 101
+COMMIT
+INSERT INTO EVENT VALUES(95,65.5E0,NULL,NULL,1,NULL,'Un grand festival de jazz avec des artistes internationaux de renomm\u00e9e mondiale, proposant des concerts en plein air et en salle.','Festival de Jazz de Montreux','Montreux, Suisse',NULL)
+ALTER SEQUENCE PUBLIC.EVENT_SEQ RESTART WITH 51
+COMMIT
+DISCONNECT
+/*C28*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C29*/SET SCHEMA PUBLIC
+INSERT INTO EVENT VALUES(95,65.5E0,2,'2026-05-12 12:42:14.863000',2,NULL,'Un grand festival de jazz avec des artistes internationaux de renomm\u00e9e mondiale, proposant des concerts en plein air et en salle.','Festival de Jazz de Montreux','Montreux, Suisse',NULL)
+ALTER SEQUENCE PUBLIC.EVENT_SEQ RESTART WITH 101
+COMMIT
+INSERT INTO EVENT VALUES(95,65.5E0,2,'2026-05-12 12:43:31.717000',3,NULL,'Un grand festival de jazz avec des artistes internationaux de renomm\u00e9e mondiale, proposant des concerts en plein air et en salle.','Festival de Jazz de Montreux','Montreux, Suisse',NULL)
+COMMIT
+DISCONNECT
+/*C30*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C31*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C32*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C33*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C34*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C35*/SET SCHEMA PUBLIC
+INSERT INTO EVENT VALUES(95,65.5E0,2,'2026-05-12 12:47:31.189000',52,2,'Un grand festival de jazz avec des artistes internationaux de renomm\u00e9e mondiale, proposant des concerts en plein air et en salle.','Festival de Jazz de Montreux','Montreux, Suisse',NULL)
+ALTER SEQUENCE PUBLIC.EVENT_SEQ RESTART WITH 151
+COMMIT
+DISCONNECT
+/*C36*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C37*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C38*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C39*/SET SCHEMA PUBLIC
+INSERT INTO EVENT VALUES(0,0.0E0,NULL,'2026-05-12 12:52:48.261000',102,NULL,'string','string','string',NULL)
+ALTER SEQUENCE PUBLIC.EVENT_SEQ RESTART WITH 201
+COMMIT
+INSERT INTO EVENT VALUES(95,65.5E0,2,'2026-05-12 12:52:52.014000',103,2,'Un grand festival de jazz avec des artistes internationaux de renomm\u00e9e mondiale, proposant des concerts en plein air et en salle.','Festival de Jazz de Montreux','Montreux, Suisse',NULL)
+COMMIT
+INSERT INTO EVENT VALUES(95,65.5E0,2,'2026-05-12 12:55:31.594000',104,2,'Un grand festival de jazz avec des artistes internationaux de renomm\u00e9e mondiale, proposant des concerts en plein air et en salle.','Festival de Jazz de Montreux','Montreux, Suisse',NULL)
+COMMIT
+DISCONNECT
+/*C40*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C41*/SET SCHEMA PUBLIC
+INSERT INTO EVENT VALUES(95,65.5E0,2,'2026-05-12 12:56:10.512000',152,2,'Un grand festival de jazz avec des artistes internationaux de renomm\u00e9e mondiale, proposant des concerts en plein air et en salle.','Festival de Jazz de Montreux','Montreux, Suisse',NULL)
+ALTER SEQUENCE PUBLIC.EVENT_SEQ RESTART WITH 251
+COMMIT
+DISCONNECT
+/*C42*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C43*/SET SCHEMA PUBLIC
+DELETE FROM EVENT WHERE ID=2
+INSERT INTO EVENT VALUES(88,120.0E0,3,'2026-05-12 12:42:14.863000',2,NULL,'Le plus grand rassemblement de d\u00e9veloppeurs et passionn\u00e9s de technologie en Europe. Au programme : Intelligence Artificielle, Cloud computing, et ateliers pratiques.','Conf\u00e9rence Tech Paris 2026','Paris, France',NULL)
+COMMIT
+/*C7*/SET SCHEMA PUBLIC
+DELETE FROM EVENT WHERE ID=1
+DELETE FROM EVENT WHERE ID=2
+DELETE FROM EVENT WHERE ID=3
+DELETE FROM EVENT WHERE ID=52
+DELETE FROM EVENT WHERE ID=102
+DELETE FROM EVENT WHERE ID=103
+DELETE FROM EVENT WHERE ID=104
+DELETE FROM EVENT WHERE ID=152
+COMMIT
+/*C43*/INSERT INTO EVENT VALUES(88,120.0E0,3,'2026-05-12 13:17:28.703000',202,NULL,'Le plus grand rassemblement de d\u00e9veloppeurs et passionn\u00e9s de technologie en Europe. Au programme : Intelligence Artificielle, Cloud computing, et ateliers pratiques.','Conf\u00e9rence Tech Paris 2026','Paris, France',NULL)
+ALTER SEQUENCE PUBLIC.EVENT_SEQ RESTART WITH 301
+COMMIT
+DISCONNECT
+/*C44*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C45*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C46*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C7*/DELETE FROM EVENT WHERE ID=202
+COMMIT
+/*C47*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C48*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C49*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C50*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C51*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C52*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C53*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C54*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C55*/SET SCHEMA PUBLIC
+INSERT INTO EVENT VALUES(88,120.0E0,3,'2026-05-12 13:43:19.749000',252,2,'Le plus grand rassemblement de d\u00e9veloppeurs et passionn\u00e9s de technologie en Europe. Au programme : Intelligence Artificielle, Cloud computing, et ateliers pratiques.','Conf\u00e9rence Tech Paris 2026','Paris, France',NULL)
+ALTER SEQUENCE PUBLIC.EVENT_SEQ RESTART WITH 351
+COMMIT
+DELETE FROM EVENT WHERE ID=252
+COMMIT
+INSERT INTO EVENT VALUES(88,120.0E0,3,'2026-05-12 13:45:32.568000',253,2,'Le plus grand rassemblement de d\u00e9veloppeurs et passionn\u00e9s de technologie en Europe. Au programme : Intelligence Artificielle, Cloud computing, et ateliers pratiques.','Conf\u00e9rence Tech Paris 2026','Paris, France',NULL)
+COMMIT
+INSERT INTO USER VALUES(52,'johndoe@gmail.com','John','DOE','$2a$10$lIGX714L9xgYFa6gRXwMD.CyHJjQ6.1G13lfQmDnGs5sn9fGRJZYC','USER_MANAGER')
+INSERT INTO MANAGER VALUES(52)
+ALTER SEQUENCE PUBLIC.USER_SEQ RESTART WITH 151
+COMMIT
+INSERT INTO EVENT VALUES(88,120.0E0,3,'2026-05-12 13:50:30.148000',254,52,'Le plus grand rassemblement de d\u00e9veloppeurs et passionn\u00e9s de technologie en Europe. Au programme : Intelligence Artificielle, Cloud computing, et ateliers pratiques.','Conf\u00e9rence Tech Paris 2026','Paris, France',NULL)
+COMMIT
+DISCONNECT
+/*C56*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C57*/SET SCHEMA PUBLIC
+DELETE FROM EVENT WHERE ID=254
+INSERT INTO EVENT VALUES(92,45.0E0,3,'2026-05-12 13:50:30.148000',254,52,'Comp\u00e9tition internationale de tennis r\u00e9unissant les 50 meilleurs joueurs mondiaux sur terre battue.','Tournoi de Tennis Open','Lyon, France',NULL)
+COMMIT
+DISCONNECT
+/*C58*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C59*/SET SCHEMA PUBLIC
+INSERT INTO EVENT VALUES(92,45.0E0,5,'2026-05-12 16:52:29.153000',302,2,'Comp\u00e9tition internationale de tennis r\u00e9unissant les 50 meilleurs joueurs mondiaux sur terre battue.','Tournoi de Tennis Open','Lyon, France',NULL)
+ALTER SEQUENCE PUBLIC.EVENT_SEQ RESTART WITH 401
+COMMIT

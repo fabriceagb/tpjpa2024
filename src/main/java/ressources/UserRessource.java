@@ -1,23 +1,161 @@
 package ressources;
 
-import entity.User;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.core.Response;
 
-@Path("user")
+import dao.UserDao;
+import dto.LoginDto;
+import dto.LoginResponseDto;
+import dto.UpdateUserDto;
+import dto.UserDto;
+import entity.Customer;
+import entity.Manager;
+import entity.Administrator;
+import entity.User;
+import jakarta.annotation.security.RolesAllowed;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+import org.mindrot.jbcrypt.BCrypt;
+import utils.JwtUtil;
+
+
+@Path("/api/user")
 @Produces({"application/json", "application/xml"})
 public class UserRessource {
-    @GET
-    public Response addUser(){
-        return Response.ok().entity("SUCCESS").build();
+    @POST
+    @Path("/register")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response addUser(UserDto request){
+        // Initialisation du DAO
+        UserDao userDao = new UserDao();
+
+        try {
+            // 1. Vérification si l'email existe déjà
+            if (request.getEmail() != null && userDao.findByEmail(request.getEmail()) != null) {
+                return Response.status(Response.Status.BAD_REQUEST)
+                        .entity("{\"error\": \"Un utilisateur avec cet email existe déjà.\"}")
+                        .build();
+            }
+
+            // 2. Vérification et instanciation selon le rôle
+            String role = request.getRole();
+            if (role == null || role.trim().isEmpty()) {
+                return Response.status(Response.Status.BAD_REQUEST)
+                        .entity("{\"error\": \"Le rôle est obligatoire (ex: CUSTOMER, MANAGER, ADMIN).\"}")
+                        .build();
+            }
+
+            User user;
+            switch (role.toUpperCase()) {
+                case "USER_CUSTOMER":
+                    user = new Customer();
+                    break;
+                case "USER_MANAGER":
+                    user = new Manager();
+                    break;
+                case "USER_ADMINISTRATOR":
+                    user = new Administrator();
+                    break;
+                default:
+                    return Response.status(Response.Status.BAD_REQUEST)
+                            .entity("{\"error\": \"Rôle inconnu : " + role + "\"}")
+                            .build();
+            }
+
+            // 3. Pour hacher le mot de passe (avant l'insertion en base)
+            String motDePasseClair = request.getPassword();
+            String motDePasseHache = BCrypt.hashpw(motDePasseClair, BCrypt.gensalt());
+
+            user.setFirstName(request.getFirstName());
+            user.setLastName(request.getLastName());
+            user.setPassword(motDePasseHache);
+            user.setEmail(request.getEmail());
+            user.setRole(role.toUpperCase());
+            
+            // 4. Sauvegarde
+            userDao.create(user);
+            return Response.status(Response.Status.CREATED).entity(user).build();
+
+        } catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("Erreur lors de la création de l'utilisateur.")
+                    .build();
+        }
     }
 
     @POST
-    public Response login(){
-        User user = new User();
-        return Response.ok().entity("SUCCESS").build();
+    @Path("/login")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response login(LoginDto request) {
+
+         UserDao userDao = new UserDao();
+
+        try {
+            // 1. Chercher l'utilisateur par son email
+            User user = userDao.findByEmail(request.getEmail());
+
+            // 2. Vérifier si l'utilisateur existe
+            if (user == null) {
+                return Response.status(Response.Status.UNAUTHORIZED)
+                        .entity("{\"error\": \"Email ou mot de passe incorrect.\"}")
+                        .build();
+            }
+
+            // 3. Vérifier le mot de passe avec BCrypt
+            // BCrypt.checkpw(MotDePasseEnClair, MotDePasseHachéEnBase)
+            boolean isPasswordValid = BCrypt.checkpw(request.getPassword(), user.getPassword());
+
+            if (isPasswordValid) {
+
+                user.setPassword(null);
+                String token = JwtUtil.generateToken(user.getEmail(),  user.getRole());
+                LoginResponseDto responseDto = new LoginResponseDto(token, user);
+
+                // Retourne statut 200 (OK) avec les infos de l'utilisateur
+                return Response.ok(responseDto).build();
+
+            } else {
+                // Mauvais mot de passe -> Erreur 401
+                return Response.status(Response.Status.UNAUTHORIZED)
+                        .entity("{\"error\": \"Email ou mot de passe incorrect.\"}")
+                        .build();
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("{\"error\": \"Erreur interne du serveur.\"}")
+                    .build();
+        }
     }
+
+    @POST
+    @Path("/update")
+    @RolesAllowed({"USER_CUSTOMER", "USER_MANAGER", "USER_ADMINISTRATOR"})
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response update(UpdateUserDto request) {
+
+        UserDao userDao = new UserDao();
+
+        try {
+            User user = new User();
+            user.setFirstName(request.getFirstName());
+            user.setLastName(request.getLastName());
+            user.setEmail(request.getEmail());
+
+            return Response.ok(user).build();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("{\"error\": \"Erreur interne du serveur.\"}")
+                    .build();
+        }
+
+
+    }
+
+
 }
