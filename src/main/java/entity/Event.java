@@ -23,6 +23,8 @@ public class Event  implements Serializable {
     private double price;
     private Date date;
     private int popularity;
+    private int numberOfTickets;
+    private boolean cancelled = false;
     private Manager manager;
     private List<Ticket> tickets = new ArrayList<Ticket>();
     private CategoryEvent categoryEvent;
@@ -82,6 +84,22 @@ public class Event  implements Serializable {
 
     public void setPopularity(int popularity) {
         this.popularity = popularity;
+    }
+
+    public int getNumberOfTickets() {
+        return numberOfTickets;
+    }
+
+    public void setNumberOfTickets(int numberOfTickets) {
+        this.numberOfTickets = numberOfTickets;
+    }
+
+    public boolean isCancelled() {
+        return cancelled;
+    }
+
+    public void setCancelled(boolean cancelled) {
+        this.cancelled = cancelled;
     }
 
     @ManyToOne

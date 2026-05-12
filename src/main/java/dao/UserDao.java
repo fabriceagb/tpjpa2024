@@ -47,6 +47,7 @@ public class UserDao extends AbstractJpaDao<Long, User> {
             user.setEmail(updateUser.getEmail());
             user.setFirstName(updateUser.getFirstName());
             user.setLastName(updateUser.getLastName());
+            user.setPhoneNumber(updateUser.getPhoneNumber());
 
             this.entityManager.merge(user);
 

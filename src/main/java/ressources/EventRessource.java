@@ -281,7 +281,7 @@ public class EventRessource {
     }
 
     /**
-     * Annuler un événement
+     * Annuler un événement (pose le flag cancelled=true, ne supprime pas)
      * POST http://localhost:8080/votre-app/api/event/cancel/1
      */
     @POST
@@ -291,8 +291,19 @@ public class EventRessource {
     public Response cancelEvent(@PathParam("id") Long id) {
         EventDao dao = new EventDao();
         try {
-            dao.cancelEvent(id);
-            return Response.ok("{\"message\": \"Événement annulé avec succès.\"}").build();
+            Event existing = dao.findById(id);
+            if (existing == null) {
+                return Response.status(Response.Status.NOT_FOUND)
+                        .entity("{\"error\": \"Événement introuvable.\"}")
+                        .build();
+            }
+            if (existing.isCancelled()) {
+                return Response.status(Response.Status.BAD_REQUEST)
+                        .entity("{\"error\": \"Cet événement est déjà annulé.\"}")
+                        .build();
+            }
+            Event cancelled = dao.cancelEvent(id);
+            return Response.ok(cancelled).build();
         } catch (Exception e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }

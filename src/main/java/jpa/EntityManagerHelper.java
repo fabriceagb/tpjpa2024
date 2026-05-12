@@ -1,6 +1,11 @@
 package jpa;
 
 import io.swagger.v3.jaxrs2.integration.resources.OpenApiResource;
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
+import io.swagger.v3.oas.annotations.info.Info;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
@@ -10,9 +15,12 @@ import ressources.CategoryEventRessource;
 import ressources.EventRessource;
 import ressources.SwaggerResource;
 import ressources.UserRessource;
+import utils.JwtAuthFilter;
 
 import java.util.HashSet;
 import java.util.Set;
+
+import ressources.TicketRessource;
 
 public class EntityManagerHelper {
 
@@ -58,17 +66,28 @@ public class EntityManagerHelper {
         getEntityManager().getTransaction().commit();
     }
 
+    @OpenAPIDefinition(
+        info = @Info(title = "Events API", version = "1.0", description = "API de gestion d'événements"),
+        security = @SecurityRequirement(name = "bearerAuth")
+    )
+    @SecurityScheme(
+        name = "bearerAuth",
+        type = SecuritySchemeType.HTTP,
+        scheme = "bearer",
+        bearerFormat = "JWT"
+    )
     @ApplicationPath("/")
     public static class TestApplication extends Application {
-
 
         @Override
         public Set<Class<?>> getClasses() {
             final Set<Class<?>> clazzes = new HashSet<Class<?>>();
 
             clazzes.add(OpenApiResource.class);
+            clazzes.add(JwtAuthFilter.class);
             clazzes.add(UserRessource.class);
             clazzes.add(CategoryEventRessource.class);
+            clazzes.add(TicketRessource.class);
             clazzes.add(EventRessource.class);
             clazzes.add(SwaggerResource.class);
 

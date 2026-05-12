@@ -4,6 +4,7 @@ public class UpdateUserDto {
     public String firstName;
     public String lastName;
     public String email;
+    public String phoneNumber;
 
     public String getFirstName() {
         return firstName;
@@ -28,4 +29,7 @@ public class UpdateUserDto {
     public void setEmail(String email) {
         this.email = email;
     }
+
+    public String getPhoneNumber() { return phoneNumber; }
+    public void setPhoneNumber(String phoneNumber) { this.phoneNumber = phoneNumber; }
 }

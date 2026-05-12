@@ -6,6 +6,7 @@ public class UserDto {
     public String firstName;
     public String lastName;
     public String role;
+    public String phoneNumber;
 
     // Getters et Setters (nécessaires pour que Jackson parse le JSON)
     public String getEmail() { return email; }
@@ -27,4 +28,7 @@ public class UserDto {
     public void setRole(String role){
         this.role = role;
     }
+
+    public String getPhoneNumber() { return phoneNumber; }
+    public void setPhoneNumber(String phoneNumber) { this.phoneNumber = phoneNumber; }
 }

@@ -15,6 +15,7 @@ public class User implements Serializable {
     private String email;
     private String password;
     private String role;
+    private String phoneNumber;
 
     public User(){
 
@@ -57,6 +58,14 @@ public class User implements Serializable {
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 }
 

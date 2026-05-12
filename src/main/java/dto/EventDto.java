@@ -8,6 +8,7 @@ public class EventDto {
     private String location;
     private double price;
     private int popularity;
+    private int numberOfTickets;
     private Long managerId;
     private Long categoryId;
 
@@ -53,6 +54,14 @@ public class EventDto {
 
     public void setPopularity(int popularity) {
         this.popularity = popularity;
+    }
+
+    public int getNumberOfTickets() {
+        return numberOfTickets;
+    }
+
+    public void setNumberOfTickets(int numberOfTickets) {
+        this.numberOfTickets = numberOfTickets;
     }
 
     public Long getManagerId() {

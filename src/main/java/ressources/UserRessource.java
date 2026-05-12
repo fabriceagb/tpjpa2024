@@ -71,6 +71,7 @@ public class UserRessource {
             user.setPassword(motDePasseHache);
             user.setEmail(request.getEmail());
             user.setRole(role.toUpperCase());
+            user.setPhoneNumber(request.getPhoneNumber());
             
             // 4. Sauvegarde
             userDao.create(user);
@@ -144,6 +145,7 @@ public class UserRessource {
             user.setFirstName(request.getFirstName());
             user.setLastName(request.getLastName());
             user.setEmail(request.getEmail());
+            user.setPhoneNumber(request.getPhoneNumber());
 
             return Response.ok(user).build();
 

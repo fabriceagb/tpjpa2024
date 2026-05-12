@@ -6,6 +6,7 @@ window.onload = function() {
     url: "http://localhost:8080/openapi.json",
     dom_id: '#swagger-ui',
     deepLinking: true,
+    persistAuthorization: true,
     presets: [
       SwaggerUIBundle.presets.apis,
       SwaggerUIStandalonePreset

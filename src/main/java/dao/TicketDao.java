@@ -15,12 +15,11 @@ public class TicketDao  extends AbstractJpaDao<Long, Ticket> {
     /**
      * LOGIQUE MÉTIER : Un client (Customer) achète un ticket pour un événement
      */
-    public void buyTicket(Long eventId, Long customerId) {
+    public Ticket buyTicket(Long eventId, Long customerId) {
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             transaction.begin();
 
-            // 1. Récupérer l'événement et le client depuis la base
             Event event = entityManager.find(Event.class, eventId);
             Customer customer = entityManager.find(Customer.class, customerId);
 
@@ -28,23 +27,33 @@ public class TicketDao  extends AbstractJpaDao<Long, Ticket> {
                 throw new IllegalArgumentException("Événement ou Client introuvable.");
             }
 
-            // 2. Créer le ticket
+            if (event.isCancelled()) {
+                throw new IllegalStateException("Impossible d'acheter un billet : l'événement est annulé.");
+            }
+
+            long soldTickets = entityManager
+                    .createQuery("SELECT COUNT(t) FROM Ticket t WHERE t.event.id = :eventId", Long.class)
+                    .setParameter("eventId", eventId)
+                    .getSingleResult();
+            if (event.getNumberOfTickets() > 0 && soldTickets >= event.getNumberOfTickets()) {
+                throw new IllegalStateException("Plus de billets disponibles pour cet événement.");
+            }
+
             Ticket ticket = new Ticket();
-            ticket.setPrice(event.getPrice()); // Le ticket prend le prix de l'événement
+            ticket.setPrice(event.getPrice());
             ticket.setNumber("TICKET-" + System.currentTimeMillis());
             ticket.setEvent(event);
             ticket.setCustomer(customer);
 
-            // 3. Sauvegarder
             entityManager.persist(ticket);
-
             transaction.commit();
-            System.out.println("Ticket acheté avec succès par " + customer.getFirstName() + " pour l'événement " + event.getLabel());
+            return ticket;
+        } catch (IllegalArgumentException | IllegalStateException e) {
+            if (transaction.isActive()) transaction.rollback();
+            throw e;
         } catch (Exception e) {
-            if (transaction.isActive()) {
-                transaction.rollback();
-            }
-            e.printStackTrace();
+            if (transaction.isActive()) transaction.rollback();
+            throw new RuntimeException("Erreur lors de l'achat du billet.", e);
         }
     }
 }

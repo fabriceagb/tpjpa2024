@@ -35,6 +35,8 @@ public class EventDao extends AbstractJpaDao<Long, Event> {
             event.setLocation(eventDto.getLocation());
             event.setPrice(eventDto.getPrice());
             event.setPopularity(eventDto.getPopularity());
+            event.setNumberOfTickets(eventDto.getNumberOfTickets());
+            event.setCancelled(false);
             event.setManager(manager);
             event.setCategoryEvent(category);
             event.setDate(new Date());
@@ -171,24 +173,27 @@ public class EventDao extends AbstractJpaDao<Long, Event> {
     }
 
     /**
-     * Annuler un événement
+     * Annuler un événement (pose le flag cancelled, ne supprime pas)
      */
-    public void cancelEvent(Long eventId) {
+    public Event cancelEvent(Long eventId) {
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             transaction.begin();
-            
-            entityManager.createQuery("DELETE FROM Ticket t WHERE t.event.id = :eventId") 
-                         .setParameter("eventId", eventId)
-                         .executeUpdate();
-            
-            System.out.println("L'événement a été annulé, et les tickets associés ont été retirés.");
+            Event event = entityManager.find(Event.class, eventId);
+            if (event == null) {
+                return null;
+            }
+            event.setCancelled(true);
+            Event updated = entityManager.merge(event);
             transaction.commit();
+            System.out.println("L'événement " + eventId + " a été marqué comme annulé.");
+            return updated;
         } catch (Exception e) {
             if (transaction.isActive()) {
                 transaction.rollback();
             }
             e.printStackTrace();
+            return null;
         }
     }
 }
