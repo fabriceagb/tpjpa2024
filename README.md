@@ -21,7 +21,7 @@ API REST back-end développée avec Jakarta EE, JPA/Hibernate et RESTEasy, perme
 L'application est une **plateforme de gestion d'événements** articulée autour de trois acteurs :
 
 | Rôle | Identifiant technique | Responsabilités |
-|---|---|---|
+| --- | --- | --- |
 | **Administrateur** | `USER_ADMINISTRATOR` | Crée et supprime les catégories d'événements ; peut annuler ou supprimer des événements |
 | **Manager** | `USER_MANAGER` | Crée, modifie, annule ses propres événements |
 | **Client** | `USER_CUSTOMER` | Consulte les événements disponibles et achète des billets |
@@ -90,7 +90,7 @@ L'application est une **plateforme de gestion d'événements** articulée autour
 **Relations bidirectionnelles (mappedBy) :**
 
 | Relation | Type | mappedBy côté propriétaire |
-|---|---|---|
+| --- | --- | --- |
 | `CategoryEvent` ↔ `Event` | `@OneToMany` / `@ManyToOne` | `categoryEvent` dans `CategoryEvent` |
 | `Event` ↔ `Ticket` | `@OneToMany` / `@ManyToOne` | `event` dans `Event` |
 | `Customer` ↔ `Ticket` | `@OneToMany` / `@ManyToOne` | `customer` dans `Customer` |
@@ -150,7 +150,7 @@ Opérations CRUD héritées : `findOne`, `findAll`, `save`, `update`, `delete`, 
 ### Une DAO par entité
 
 | DAO | Entité servie |
-|---|---|
+| --- | --- |
 | `UserDao` | `User` |
 | `CustomerDao` | `Customer` |
 | `ManagerDao` | `Manager` |
@@ -242,8 +242,8 @@ Event cancelEvent(Long eventId)
 ### `/api/user` — Utilisateurs
 
 #### `POST /api/user/register` — Inscription
-| | |
-|---|---|
+| Champ | Valeur |
+| --- | --- |
 | Sécurité | Public |
 | Content-Type | `application/json` |
 | Statut succès | `201 Created` |
@@ -284,8 +284,8 @@ Valeurs valides pour `role` : `USER_CUSTOMER`, `USER_MANAGER`, `USER_ADMINISTRAT
 ---
 
 #### `POST /api/user/login` — Connexion
-| | |
-|---|---|
+| Champ | Valeur |
+| --- | --- |
 | Sécurité | Public |
 | Content-Type | `application/json` |
 | Statut succès | `200 OK` |
@@ -319,8 +319,8 @@ Valeurs valides pour `role` : `USER_CUSTOMER`, `USER_MANAGER`, `USER_ADMINISTRAT
 ---
 
 #### `POST /api/user/update` — Mise à jour du profil
-| | |
-|---|---|
+| Champ | Valeur |
+| --- | --- |
 | Sécurité | `USER_CUSTOMER`, `USER_MANAGER`, `USER_ADMINISTRATOR` |
 | En-tête requis | `Authorization: Bearer <token>` |
 | Content-Type | `application/json` |
@@ -354,8 +354,8 @@ Valeurs valides pour `role` : `USER_CUSTOMER`, `USER_MANAGER`, `USER_ADMINISTRAT
 ### `/api/event` — Événements
 
 #### `GET /api/event/all` — Liste de tous les événements
-| | |
-|---|---|
+| Champ | Valeur |
+| --- | --- |
 | Sécurité | Public |
 | Statut succès | `200 OK` |
 
@@ -382,8 +382,8 @@ Valeurs valides pour `role` : `USER_CUSTOMER`, `USER_MANAGER`, `USER_ADMINISTRAT
 ---
 
 #### `GET /api/event/{id}` — Détail d'un événement
-| | |
-|---|---|
+| Champ | Valeur |
+| --- | --- |
 | Sécurité | Public |
 | Paramètre | `id` (Long) — identifiant de l'événement |
 | Statut succès | `200 OK` |
@@ -398,8 +398,8 @@ Valeurs valides pour `role` : `USER_CUSTOMER`, `USER_MANAGER`, `USER_ADMINISTRAT
 ---
 
 #### `GET /api/event/upcoming` — Événements à venir
-| | |
-|---|---|
+| Champ | Valeur |
+| --- | --- |
 | Sécurité | Public |
 | Statut succès | `200 OK` |
 
@@ -410,8 +410,8 @@ Retourne tous les événements dont la date est supérieure ou égale à aujourd
 ---
 
 #### `GET /api/event/search?label={mot}` — Recherche par mot-clé
-| | |
-|---|---|
+| Champ | Valeur |
+| --- | --- |
 | Sécurité | Public |
 | Paramètre query | `label` (String) — mot-clé recherché dans le titre |
 | Statut succès | `200 OK` |
@@ -428,8 +428,8 @@ Recherche insensible à la casse via Criteria Query.
 ---
 
 #### `GET /api/event/category/{categoryId}` — Événements par catégorie
-| | |
-|---|---|
+| Champ | Valeur |
+| --- | --- |
 | Sécurité | Public |
 | Paramètre | `categoryId` (Long) |
 | Statut succès | `200 OK` |
@@ -439,8 +439,8 @@ Recherche insensible à la casse via Criteria Query.
 ---
 
 #### `GET /api/event/manager/{managerId}` — Événements par manager
-| | |
-|---|---|
+| Champ | Valeur |
+| --- | --- |
 | Sécurité | Public |
 | Paramètre | `managerId` (Long) |
 | Statut succès | `200 OK` |
@@ -450,8 +450,8 @@ Recherche insensible à la casse via Criteria Query.
 ---
 
 #### `GET /api/event/location/{location}` — Événements par lieu
-| | |
-|---|---|
+| Champ | Valeur |
+| --- | --- |
 | Sécurité | Public |
 | Paramètre | `location` (String) — nom du lieu exact |
 | Statut succès | `200 OK` |
@@ -461,8 +461,8 @@ Recherche insensible à la casse via Criteria Query.
 ---
 
 #### `GET /api/event/price?min={min}&max={max}` — Événements par fourchette de prix
-| | |
-|---|---|
+| Champ | Valeur |
+| --- | --- |
 | Sécurité | Public |
 | Paramètres query | `min` (Double, défaut `0.0`) et `max` (Double, défaut `MAX_VALUE`) |
 | Statut succès | `200 OK` |
@@ -472,8 +472,8 @@ Recherche insensible à la casse via Criteria Query.
 ---
 
 #### `POST /api/event/add` — Créer un événement
-| | |
-|---|---|
+| Champ | Valeur |
+| --- | --- |
 | Sécurité | `USER_MANAGER` |
 | En-tête requis | `Authorization: Bearer <token>` |
 | Content-Type | `application/json` |
@@ -524,8 +524,8 @@ Format de la date : `dd/MM/yyyy HH:mm`.
 ---
 
 #### `PUT /api/event/update/{id}` — Modifier un événement
-| | |
-|---|---|
+| Champ | Valeur |
+| --- | --- |
 | Sécurité | `USER_MANAGER` |
 | En-tête requis | `Authorization: Bearer <token>` |
 | Paramètre | `id` (Long) — identifiant de l'événement |
@@ -553,8 +553,8 @@ Format de la date : `dd/MM/yyyy HH:mm`.
 ---
 
 #### `DELETE /api/event/delete/{id}` — Supprimer définitivement un événement
-| | |
-|---|---|
+| Champ | Valeur |
+| --- | --- |
 | Sécurité | `USER_MANAGER`, `USER_ADMINISTRATOR` |
 | En-tête requis | `Authorization: Bearer <token>` |
 | Paramètre | `id` (Long) |
@@ -573,8 +573,8 @@ Format de la date : `dd/MM/yyyy HH:mm`.
 ---
 
 #### `POST /api/event/cancel/{id}` — Annuler un événement
-| | |
-|---|---|
+| Champ | Valeur |
+| --- | --- |
 | Sécurité | `USER_MANAGER`, `USER_ADMINISTRATOR` |
 | En-tête requis | `Authorization: Bearer <token>` |
 | Paramètre | `id` (Long) |
@@ -601,8 +601,8 @@ Suppression logique : positionne `cancelled = true` sans supprimer l'enregistrem
 ---
 
 #### `POST /api/event/{id}/buy` — Acheter des billets
-| | |
-|---|---|
+| Champ | Valeur |
+| --- | --- |
 | Sécurité | `USER_CUSTOMER` |
 | En-tête requis | `Authorization: Bearer <token>` |
 | Paramètre | `id` (Long) — identifiant de l'événement |
@@ -653,8 +653,8 @@ Suppression logique : positionne `cancelled = true` sans supprimer l'enregistrem
 ### `/api/categoryEvent` — Catégories d'événements
 
 #### `GET /api/categoryEvent/all` — Liste toutes les catégories
-| | |
-|---|---|
+| Champ | Valeur |
+| --- | --- |
 | Sécurité | Public |
 | Statut succès | `200 OK` |
 
@@ -670,8 +670,8 @@ Suppression logique : positionne `cancelled = true` sans supprimer l'enregistrem
 ---
 
 #### `GET /api/categoryEvent/{id}` — Détail d'une catégorie
-| | |
-|---|---|
+| Champ | Valeur |
+| --- | --- |
 | Sécurité | Public |
 | Paramètre | `id` (Long) |
 | Statut succès | `200 OK` |
@@ -689,8 +689,8 @@ Suppression logique : positionne `cancelled = true` sans supprimer l'enregistrem
 ---
 
 #### `GET /api/categoryEvent/search?name={nom}` — Recherche par nom exact
-| | |
-|---|---|
+| Champ | Valeur |
+| --- | --- |
 | Sécurité | Public |
 | Paramètre query | `name` (String) — nom exact de la catégorie |
 | Statut succès | `200 OK` |
@@ -711,8 +711,8 @@ Recherche via Criteria Query avec prédicat d'égalité stricte.
 ---
 
 #### `POST /api/categoryEvent/add` — Créer une catégorie
-| | |
-|---|---|
+| Champ | Valeur |
+| --- | --- |
 | Sécurité | `USER_ADMINISTRATOR` |
 | En-tête requis | `Authorization: Bearer <token>` |
 | Content-Type | `application/json` |
@@ -731,8 +731,8 @@ Recherche via Criteria Query avec prédicat d'égalité stricte.
 ---
 
 #### `PUT /api/categoryEvent/update/{id}` — Modifier une catégorie
-| | |
-|---|---|
+| Champ | Valeur |
+| --- | --- |
 | Sécurité | `USER_ADMINISTRATOR` |
 | En-tête requis | `Authorization: Bearer <token>` |
 | Paramètre | `id` (Long) |
@@ -757,8 +757,8 @@ Recherche via Criteria Query avec prédicat d'égalité stricte.
 ---
 
 #### `DELETE /api/categoryEvent/delete/{id}` — Supprimer une catégorie
-| | |
-|---|---|
+| Champ | Valeur |
+| --- | --- |
 | Sécurité | `USER_ADMINISTRATOR` |
 | En-tête requis | `Authorization: Bearer <token>` |
 | Paramètre | `id` (Long) |
@@ -791,7 +791,7 @@ L'authentification repose sur des **tokens JWT** (expiration : 2 heures, encodag
 **Matrice des permissions :**
 
 | Action | `USER_CUSTOMER` | `USER_MANAGER` | `USER_ADMINISTRATOR` |
-|---|:---:|:---:|:---:|
+| --- | :---: | :---: | :---: |
 | Consulter les événements / catégories | ✓ | ✓ | ✓ |
 | Acheter des billets | ✓ | — | — |
 | Créer / modifier des événements | — | ✓ | — |
