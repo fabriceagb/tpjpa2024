@@ -6,6 +6,7 @@ public class EventDto {
     private String label;
     private String description;
     private String location;
+    private String date;
     private double price;
     private int popularity;
     private int numberOfTickets;
@@ -78,5 +79,13 @@ public class EventDto {
 
     public void setCategoryId(Long categoryId) {
         this.categoryId = categoryId;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
     }
 }

@@ -6,54 +6,50 @@ import entity.Event;
 import entity.Ticket;
 import jakarta.persistence.EntityTransaction;
 
-public class TicketDao  extends AbstractJpaDao<Long, Ticket> {
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
+
+public class TicketDao extends AbstractJpaDao<Long, Ticket> {
 
     public TicketDao(){
         super();
     }
 
-    /**
-     * LOGIQUE MÉTIER : Un client (Customer) achète un ticket pour un événement
-     */
-    public Ticket buyTicket(Long eventId, Long customerId) {
+
+    public List<Ticket> buyTicket(int numberOfTicket, Event event){
         EntityTransaction transaction = entityManager.getTransaction();
+        List<Ticket> tickets = new ArrayList<Ticket>();
         try {
             transaction.begin();
+            CustomerDao customerDao = new CustomerDao();
+            Customer customer = customerDao.findById(1L);
 
-            Event event = entityManager.find(Event.class, eventId);
-            Customer customer = entityManager.find(Customer.class, customerId);
-
-            if (event == null || customer == null) {
-                throw new IllegalArgumentException("Événement ou Client introuvable.");
+            for( int i = 0; i < numberOfTicket ; i++)
+            {
+                Ticket  ticket =  new Ticket();
+                ticket.setEvent(event);
+                ticket.setNumber("TICK-" + UUID.randomUUID().toString());;
+                ticket.setCustomer(customer);
+                ticket.setPrice(event.getPrice());
+                entityManager.persist(ticket);
+                tickets.add(ticket);
+                event.setNumberOfTickets(event.getNumberOfTickets() - 1);
+                entityManager.persist(ticket);
+                entityManager.merge(event);   
             }
 
-            if (event.isCancelled()) {
-                throw new IllegalStateException("Impossible d'acheter un billet : l'événement est annulé.");
-            }
-
-            long soldTickets = entityManager
-                    .createQuery("SELECT COUNT(t) FROM Ticket t WHERE t.event.id = :eventId", Long.class)
-                    .setParameter("eventId", eventId)
-                    .getSingleResult();
-            if (event.getNumberOfTickets() > 0 && soldTickets >= event.getNumberOfTickets()) {
-                throw new IllegalStateException("Plus de billets disponibles pour cet événement.");
-            }
-
-            Ticket ticket = new Ticket();
-            ticket.setPrice(event.getPrice());
-            ticket.setNumber("TICKET-" + System.currentTimeMillis());
-            ticket.setEvent(event);
-            ticket.setCustomer(customer);
-
-            entityManager.persist(ticket);
             transaction.commit();
-            return ticket;
-        } catch (IllegalArgumentException | IllegalStateException e) {
-            if (transaction.isActive()) transaction.rollback();
-            throw e;
+            System.out.println(numberOfTicket + " ticket(s) acheté(s) avec succès.");
+            return tickets;
+
         } catch (Exception e) {
-            if (transaction.isActive()) transaction.rollback();
-            throw new RuntimeException("Erreur lors de l'achat du billet.", e);
+            if (transaction.isActive()) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+            return  null;
         }
     }
 }

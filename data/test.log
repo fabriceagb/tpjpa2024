@@ -1,7 +1,4 @@
-/*C1*/SET SCHEMA SYSTEM_LOBS
-INSERT INTO BLOCKS VALUES(0,2147483647,0)
-COMMIT
-/*C3*/SET SCHEMA PUBLIC
+/*C4*/SET SCHEMA PUBLIC
 create sequence Account_SEQ start with 1 increment by 50
 create sequence Artist_SEQ start with 1 increment by 50
 create sequence CategoryEvent_SEQ start with 1 increment by 50
@@ -26,7 +23,7 @@ alter table Event add constraint FKbqogctkwfjtvoat44hp4edfmd foreign key (manage
 alter table Manager add constraint FKmt69a5398qo3npkrka1n0haux foreign key (id) references User
 alter table Ticket add constraint FKapfvsrtph7xc0vlx863ueppy6 foreign key (customer_id) references Customer
 alter table Ticket add constraint FKsotv3qctce5ggaewd002dd71s foreign key (event_id) references Event
-/*C4*/SET SCHEMA PUBLIC
+/*C5*/SET SCHEMA PUBLIC
 INSERT INTO CATEGORYEVENT VALUES(1,'Concert & Musique')
 ALTER SEQUENCE PUBLIC.CATEGORYEVENT_SEQ RESTART WITH 51
 COMMIT
@@ -43,14 +40,6 @@ INSERT INTO CATEGORYEVENT VALUES(6,'Webinaire & En ligne')
 COMMIT
 INSERT INTO CATEGORYEVENT VALUES(7,'Networking & Rencontres')
 COMMIT
-/*C3*/DISCONNECT
-/*C4*/INSERT INTO USER VALUES(1,'setondjifabriceagbo@gmail.com','Setondji Fabrice','AGBO','$2a$10$DHi4kV7k9V1z.D9rRu.yse3qT8eQgMR3ZdjuyUnzlc2iFMH8Czc7a','+33 7 72 88 05 34','USER_MANAGER')
-INSERT INTO MANAGER VALUES(1)
-ALTER SEQUENCE PUBLIC.USER_SEQ RESTART WITH 51
-COMMIT
-/*C5*/SET SCHEMA PUBLIC
-INSERT INTO EVENT VALUES(FALSE,14,3,200.0E0,2,'2026-05-13 06:13:10.867000',1,1,'Une conf\u00e9rence passionnante sur l''impact de l''IA dans le d\u00e9veloppement logiciel.','Conf\u00e9rence IA & Futur"','Paris France')
-ALTER SEQUENCE PUBLIC.EVENT_SEQ RESTART WITH 51
-COMMIT
-DELETE FROM EVENT WHERE ID=1
-COMMIT
+/*C4*/DISCONNECT
+/*C3*/SET SCHEMA PUBLIC
+DISCONNECT

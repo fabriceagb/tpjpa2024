@@ -1,10 +1,7 @@
 package ressources;
 
-import dao.CategoryEventDao;
-import dao.EventDao;
-import dao.ManagerDao;
-import dao.TicketDao;
-import dao.UserDao;
+import dao.*;
+import dto.BuyTicketDto;
 import dto.EventDto;
 import dto.UpdateEventDto;
 import entity.CategoryEvent;
@@ -19,6 +16,7 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.SecurityContext;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Path("/api/event")
@@ -294,21 +292,35 @@ public class EventRessource {
     @Path("/{id}/buy")
     @RolesAllowed("USER_CUSTOMER")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response buyTicket(@PathParam("id") Long eventId, @Context SecurityContext securityContext) {
+    public Response buyTicket(@PathParam("id") Long eventId, BuyTicketDto request, @Context SecurityContext securityContext) {
         try {
-            String email = securityContext.getUserPrincipal().getName();
 
-            UserDao userDao = new UserDao();
-            User user = userDao.findByEmail(email);
-            if (user == null) {
-                return Response.status(Response.Status.NOT_FOUND)
-                        .entity("{\"error\": \"Utilisateur introuvable.\"}")
+//            UserDao userDao = new UserDao();
+//            User user = userDao.findByEmail(email);
+//            if (user == null) {
+//                return Response.status(Response.Status.NOT_FOUND)
+//                        .entity("{\"error\": \"Utilisateur introuvable.\"}")
+//                        .build();
+//            }
+            EventDao eventDao = new EventDao();
+            TicketDao  ticketDao = new TicketDao();
+            Event event = eventDao.findById(eventId);
+            if(event == null) {
+                return Response.status(Response.Status.BAD_REQUEST)
+                        .entity("{\"error\": \"Cet evernement n'existe pas\"}")
                         .build();
             }
 
-            TicketDao ticketDao = new TicketDao();
-            Ticket ticket = ticketDao.buyTicket(eventId, user.getId());
-            return Response.status(Response.Status.CREATED).entity(ticket).build();
+            if(request.numberOfTickets <= 0) {
+                return Response.status(Response.Status.BAD_REQUEST)
+                        .entity("{\"error\": \"Le nombre de ticket doit etre superieur a 0\"}")
+                        .build();
+            }
+
+
+            List<Ticket> tickets = ticketDao.buyTicket(request.numberOfTickets, event);
+
+            return Response.status(Response.Status.CREATED).entity(tickets).build();
 
         } catch (IllegalArgumentException e) {
             return Response.status(Response.Status.NOT_FOUND)

@@ -11,6 +11,8 @@ import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -24,6 +26,19 @@ public class EventDao extends AbstractJpaDao<Long, Event> {
      *  Ajouter un nouvel événement en base de données
      */
     public Event create(EventDto eventDto, Manager manager, CategoryEvent category) {
+        if (eventDto.getDate() == null || eventDto.getDate().trim().isEmpty()) {
+            throw new IllegalArgumentException("La date de l'événement est obligatoire.");
+        }
+        Date parsedDate;
+        try {
+            // Le format "dd/MM/yyyy HH:mm" est utilisé pour parser la date et l'heure.
+            SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+            formatter.setLenient(false); // Pour une validation stricte du format
+            parsedDate = formatter.parse(eventDto.getDate());
+        } catch (ParseException e) {
+            throw new IllegalArgumentException("Format de date invalide pour '" + eventDto.getDate() + "'. Le format attendu est jj/MM/aaaa HH:mm.");
+        }
+
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             transaction.begin();
@@ -39,7 +54,7 @@ public class EventDao extends AbstractJpaDao<Long, Event> {
             event.setCancelled(false);
             event.setManager(manager);
             event.setCategoryEvent(category);
-            event.setDate(new Date());
+            event.setDate(parsedDate);
             entityManager.persist(event);
             
             transaction.commit();

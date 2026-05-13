@@ -15,12 +15,9 @@ import ressources.CategoryEventRessource;
 import ressources.EventRessource;
 import ressources.SwaggerResource;
 import ressources.UserRessource;
-import utils.JwtAuthFilter;
 
 import java.util.HashSet;
 import java.util.Set;
-
-import ressources.TicketRessource;
 
 public class EntityManagerHelper {
 
@@ -86,7 +83,6 @@ public class EntityManagerHelper {
             clazzes.add(OpenApiResource.class);
             clazzes.add(UserRessource.class);
             clazzes.add(CategoryEventRessource.class);
-            clazzes.add(TicketRessource.class);
             clazzes.add(EventRessource.class);
             clazzes.add(SwaggerResource.class);
 
