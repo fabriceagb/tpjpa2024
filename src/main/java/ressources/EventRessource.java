@@ -5,16 +5,16 @@ import dto.BuyTicketDto;
 import dto.EventDto;
 import dto.UpdateEventDto;
 import entity.CategoryEvent;
+import entity.Customer;
 import entity.Event;
 import entity.Manager;
 import entity.Ticket;
 import entity.User;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.ws.rs.*;
-import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.core.SecurityContext;
+import utils.JwtUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -77,30 +77,29 @@ public class EventRessource {
     @RolesAllowed("USER_MANAGER")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response createEvent(EventDto request) {
+    public Response createEvent(EventDto request, @HeaderParam("Authorization") String authHeader) {
         EventDao dao = new EventDao();
         try {
+            String email = JwtUtil.getEmailFromToken(authHeader.substring(7));
             ManagerDao managerDao = new ManagerDao();
+            Manager manager = managerDao.findByEmail(email);
+            if (manager == null) {
+                return Response.status(Response.Status.FORBIDDEN)
+                        .entity("{\"error\": \"Aucun manager trouvé pour ce compte.\"}")
+                        .build();
+            }
+
             CategoryEventDao categoryEventDao = new CategoryEventDao();
-
-            Manager manager = managerDao.findById(request.getManagerId());
-            if(manager == null) {
-                 return Response.status(Response.Status.BAD_REQUEST)
-                        .entity("{\"error\": \"Le champ managerId est obligatoire pour créer un événement.\"}")
-                        .build();
-            }
-            
             CategoryEvent category = categoryEventDao.findById(request.getCategoryId());
-            if(category == null) {
+            if (category == null) {
                 return Response.status(Response.Status.BAD_REQUEST)
-                        .entity("{\"error\": \"Le champ categoryId est obligatoire pour créer un événement.\"}")
+                        .entity("{\"error\": \"Catégorie introuvable.\"}")
                         .build();
             }
-            
-            
-            Event event =  dao.create(request, manager, category);
 
+            Event event = dao.create(request, manager, category);
             return Response.status(Response.Status.CREATED).entity(event).build();
+
         } catch (IllegalArgumentException e) {
             return Response.status(Response.Status.BAD_REQUEST)
                     .entity("{\"error\": \"" + e.getMessage() + "\"}").build();
@@ -292,34 +291,33 @@ public class EventRessource {
     @Path("/{id}/buy")
     @RolesAllowed("USER_CUSTOMER")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response buyTicket(@PathParam("id") Long eventId, BuyTicketDto request, @Context SecurityContext securityContext) {
+    public Response buyTicket(@PathParam("id") Long eventId, BuyTicketDto request, @HeaderParam("Authorization") String authHeader) {
         try {
+            String email = JwtUtil.getEmailFromToken(authHeader.substring(7));
+            UserDao userDao = new UserDao();
+            Customer customer = (Customer) userDao.findByEmail(email);
+            if (customer == null) {
+                return Response.status(Response.Status.NOT_FOUND)
+                        .entity("{\"error\": \"Client introuvable.\"}")
+                        .build();
+            }
 
-//            UserDao userDao = new UserDao();
-//            User user = userDao.findByEmail(email);
-//            if (user == null) {
-//                return Response.status(Response.Status.NOT_FOUND)
-//                        .entity("{\"error\": \"Utilisateur introuvable.\"}")
-//                        .build();
-//            }
             EventDao eventDao = new EventDao();
-            TicketDao  ticketDao = new TicketDao();
             Event event = eventDao.findById(eventId);
-            if(event == null) {
-                return Response.status(Response.Status.BAD_REQUEST)
-                        .entity("{\"error\": \"Cet evernement n'existe pas\"}")
+            if (event == null) {
+                return Response.status(Response.Status.NOT_FOUND)
+                        .entity("{\"error\": \"Événement introuvable.\"}")
                         .build();
             }
 
-            if(request.numberOfTickets <= 0) {
+            if (request.numberOfTickets <= 0) {
                 return Response.status(Response.Status.BAD_REQUEST)
-                        .entity("{\"error\": \"Le nombre de ticket doit etre superieur a 0\"}")
+                        .entity("{\"error\": \"Le nombre de tickets doit être supérieur à 0.\"}")
                         .build();
             }
 
-
-            List<Ticket> tickets = ticketDao.buyTicket(request.numberOfTickets, event);
-
+            TicketDao ticketDao = new TicketDao();
+            List<Ticket> tickets = ticketDao.buyTicket(request.numberOfTickets, event, customer);
             return Response.status(Response.Status.CREATED).entity(tickets).build();
 
         } catch (IllegalArgumentException e) {

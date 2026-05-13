@@ -10,7 +10,6 @@ public class EventDto {
     private double price;
     private int popularity;
     private int numberOfTickets;
-    private Long managerId;
     private Long categoryId;
 
     public EventDto() {
@@ -63,14 +62,6 @@ public class EventDto {
 
     public void setNumberOfTickets(int numberOfTickets) {
         this.numberOfTickets = numberOfTickets;
-    }
-
-    public Long getManagerId() {
-        return managerId;
-    }
-
-    public void setManagerId(Long managerId) {
-        this.managerId = managerId;
     }
 
     public Long getCategoryId() {

@@ -1,5 +1,10 @@
 package dao;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+
 import dao.generic.AbstractJpaDao;
 import dto.EventDto;
 import entity.CategoryEvent;
@@ -10,11 +15,6 @@ import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
 
 public class EventDao extends AbstractJpaDao<Long, Event> {
 
@@ -42,9 +42,7 @@ public class EventDao extends AbstractJpaDao<Long, Event> {
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             transaction.begin();
-            Event event = new Event();
-            System.out.println("Création de l'événement : " + eventDto.getLabel() + " pour le manager ID : " + eventDto.getManagerId());
-            
+            Event event = new Event();            
             event.setLabel(eventDto.getLabel());
             event.setDescription(eventDto.getDescription());
             event.setLocation(eventDto.getLocation());

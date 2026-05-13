@@ -136,12 +136,12 @@ public class UserRessource {
     @RolesAllowed({"USER_CUSTOMER", "USER_MANAGER", "USER_ADMINISTRATOR"})
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response update(UpdateUserDto request, @Context jakarta.ws.rs.core.SecurityContext securityContext) {
+    public Response update(UpdateUserDto request, @HeaderParam("Authorization") String authHeader) {
 
         UserDao userDao = new UserDao();
 
         try {
-            String email = securityContext.getUserPrincipal().getName();
+            String email = JwtUtil.getEmailFromToken(authHeader.substring(7));
 
             User updateData = new User();
             updateData.setFirstName(request.getFirstName());

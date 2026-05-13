@@ -18,13 +18,11 @@ public class TicketDao extends AbstractJpaDao<Long, Ticket> {
     }
 
 
-    public List<Ticket> buyTicket(int numberOfTicket, Event event){
+    public List<Ticket> buyTicket(int numberOfTicket, Event event, Customer customer){
         EntityTransaction transaction = entityManager.getTransaction();
         List<Ticket> tickets = new ArrayList<Ticket>();
         try {
             transaction.begin();
-            CustomerDao customerDao = new CustomerDao();
-            Customer customer = customerDao.findById(1L);
 
             for( int i = 0; i < numberOfTicket ; i++)
             {
@@ -36,7 +34,6 @@ public class TicketDao extends AbstractJpaDao<Long, Ticket> {
                 entityManager.persist(ticket);
                 tickets.add(ticket);
                 event.setNumberOfTickets(event.getNumberOfTickets() - 1);
-                entityManager.persist(ticket);
                 entityManager.merge(event);   
             }
 

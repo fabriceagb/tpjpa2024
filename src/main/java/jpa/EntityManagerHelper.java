@@ -15,7 +15,9 @@ import ressources.CategoryEventRessource;
 import ressources.EventRessource;
 import ressources.SwaggerResource;
 import ressources.UserRessource;
+import utils.JwtAuthFilter;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -87,6 +89,11 @@ public class EntityManagerHelper {
             clazzes.add(SwaggerResource.class);
 
             return clazzes;
+        }
+
+        @Override
+        public Set<Object> getSingletons() {
+            return Collections.singleton(new JwtAuthFilter());
         }
 
     }
