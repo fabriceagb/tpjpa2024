@@ -3,6 +3,7 @@ package ressources;
 import dao.*;
 import dto.BuyTicketDto;
 import dto.EventDto;
+import dto.TicketResponseDto;
 import dto.UpdateEventDto;
 import entity.CategoryEvent;
 import entity.Customer;
@@ -18,6 +19,7 @@ import utils.JwtUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Path("/api/event")
 @Produces(MediaType.APPLICATION_JSON)
@@ -310,15 +312,30 @@ public class EventRessource {
                         .build();
             }
 
+            if (event.isCancelled()) {
+                return Response.status(Response.Status.CONFLICT)
+                        .entity("{\"error\": \"Cet événement est annulé, l'achat de billets est impossible.\"}")
+                        .build();
+            }
+
             if (request.numberOfTickets <= 0) {
                 return Response.status(Response.Status.BAD_REQUEST)
                         .entity("{\"error\": \"Le nombre de tickets doit être supérieur à 0.\"}")
                         .build();
             }
 
+            if (event.getNumberOfTickets() < request.numberOfTickets) {
+                return Response.status(Response.Status.CONFLICT)
+                        .entity("{\"error\": \"Pas assez de billets disponibles. Disponibles : " + event.getNumberOfTickets() + "\"}")
+                        .build();
+            }
+
             TicketDao ticketDao = new TicketDao();
             List<Ticket> tickets = ticketDao.buyTicket(request.numberOfTickets, event, customer);
-            return Response.status(Response.Status.CREATED).entity(tickets).build();
+            List<TicketResponseDto> response = tickets.stream()
+                    .map(TicketResponseDto::new)
+                    .collect(Collectors.toList());
+            return Response.status(Response.Status.CREATED).entity(response).build();
 
         } catch (IllegalArgumentException e) {
             return Response.status(Response.Status.NOT_FOUND)
