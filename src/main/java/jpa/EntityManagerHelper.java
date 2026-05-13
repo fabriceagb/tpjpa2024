@@ -84,7 +84,6 @@ public class EntityManagerHelper {
             final Set<Class<?>> clazzes = new HashSet<Class<?>>();
 
             clazzes.add(OpenApiResource.class);
-            clazzes.add(JwtAuthFilter.class);
             clazzes.add(UserRessource.class);
             clazzes.add(CategoryEventRessource.class);
             clazzes.add(TicketRessource.class);
