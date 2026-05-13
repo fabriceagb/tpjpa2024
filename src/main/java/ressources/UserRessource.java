@@ -136,18 +136,26 @@ public class UserRessource {
     @RolesAllowed({"USER_CUSTOMER", "USER_MANAGER", "USER_ADMINISTRATOR"})
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response update(UpdateUserDto request) {
+    public Response update(UpdateUserDto request, @Context jakarta.ws.rs.core.SecurityContext securityContext) {
 
         UserDao userDao = new UserDao();
 
         try {
-            User user = new User();
-            user.setFirstName(request.getFirstName());
-            user.setLastName(request.getLastName());
-            user.setEmail(request.getEmail());
-            user.setPhoneNumber(request.getPhoneNumber());
+            String email = securityContext.getUserPrincipal().getName();
 
-            return Response.ok(user).build();
+            User updateData = new User();
+            updateData.setFirstName(request.getFirstName());
+            updateData.setLastName(request.getLastName());
+            updateData.setEmail(request.getEmail());
+            updateData.setPhoneNumber(request.getPhoneNumber());
+
+            userDao.update(email, updateData);
+
+            User updated = userDao.findByEmail(
+                request.getEmail() != null ? request.getEmail() : email
+            );
+            if (updated != null) updated.setPassword(null);
+            return Response.ok(updated).build();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -155,8 +163,6 @@ public class UserRessource {
                     .entity("{\"error\": \"Erreur interne du serveur.\"}")
                     .build();
         }
-
-
     }
 
 
