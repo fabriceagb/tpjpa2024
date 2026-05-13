@@ -1,16 +1,59 @@
 package dto;
 
 public class LoginResponseDto {
-    private String token;
-    private Object user; // Peut être remplacé par un UserDto sécurisé
+    public String token;
+    public String email;
+    public String firstName;
+    public String lastName;
+    public String role;
+    public String phone;
 
-    public LoginResponseDto(String token, Object user) {
-        this.token = token;
-        this.user = user;
+
+    public String getToken() {
+        return token;
     }
 
-    public String getToken() { return token; }
-    public void setToken(String token) { this.token = token; }
-    public Object getUser() { return user; }
-    public void setUser(Object user) { this.user = user; }
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
 }

@@ -15,12 +15,16 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.mindrot.jbcrypt.BCrypt;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import utils.JwtUtil;
 
 
 @Path("/api/user")
 @Produces({"application/json", "application/xml"})
 public class UserRessource {
+    private static final Logger log = LoggerFactory.getLogger(UserRessource.class);
+
     @POST
     @Path("/register")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -93,27 +97,28 @@ public class UserRessource {
          UserDao userDao = new UserDao();
 
         try {
-            // 1. Chercher l'utilisateur par son email
             User user = userDao.findByEmail(request.getEmail());
 
-            // 2. Vérifier si l'utilisateur existe
             if (user == null) {
                 return Response.status(Response.Status.UNAUTHORIZED)
                         .entity("{\"error\": \"Email ou mot de passe incorrect.\"}")
                         .build();
             }
 
-            // 3. Vérifier le mot de passe avec BCrypt
-            // BCrypt.checkpw(MotDePasseEnClair, MotDePasseHachéEnBase)
+
             boolean isPasswordValid = BCrypt.checkpw(request.getPassword(), user.getPassword());
 
             if (isPasswordValid) {
 
                 String token = JwtUtil.generateToken(user.getEmail(),  user.getRole());
-                LoginResponseDto responseDto = new LoginResponseDto(token, user);
-
-                // Retourne statut 200 (OK) avec les infos de l'utilisateur
-                return Response.ok(responseDto).build();
+                LoginResponseDto loginResponseDto  = new LoginResponseDto();
+                loginResponseDto.setToken(token);
+                loginResponseDto.setEmail(user.getEmail());
+                loginResponseDto.setFirstName(user.getFirstName());
+                loginResponseDto.setLastName(user.getLastName());
+                loginResponseDto.setRole(user.getRole());
+                loginResponseDto.setPhone(user.getPhoneNumber());
+                return Response.ok(loginResponseDto).build();
 
             } else {
                 // Mauvais mot de passe -> Erreur 401

@@ -1,4 +1,7 @@
-/*C4*/SET SCHEMA PUBLIC
+/*C1*/SET SCHEMA SYSTEM_LOBS
+INSERT INTO BLOCKS VALUES(0,2147483647,0)
+COMMIT
+/*C3*/SET SCHEMA PUBLIC
 create sequence Account_SEQ start with 1 increment by 50
 create sequence Artist_SEQ start with 1 increment by 50
 create sequence CategoryEvent_SEQ start with 1 increment by 50
@@ -23,7 +26,7 @@ alter table Event add constraint FKbqogctkwfjtvoat44hp4edfmd foreign key (manage
 alter table Manager add constraint FKmt69a5398qo3npkrka1n0haux foreign key (id) references User
 alter table Ticket add constraint FKapfvsrtph7xc0vlx863ueppy6 foreign key (customer_id) references Customer
 alter table Ticket add constraint FKsotv3qctce5ggaewd002dd71s foreign key (event_id) references Event
-/*C5*/SET SCHEMA PUBLIC
+/*C4*/SET SCHEMA PUBLIC
 INSERT INTO CATEGORYEVENT VALUES(1,'Concert & Musique')
 ALTER SEQUENCE PUBLIC.CATEGORYEVENT_SEQ RESTART WITH 51
 COMMIT
@@ -40,6 +43,23 @@ INSERT INTO CATEGORYEVENT VALUES(6,'Webinaire & En ligne')
 COMMIT
 INSERT INTO CATEGORYEVENT VALUES(7,'Networking & Rencontres')
 COMMIT
-/*C4*/DISCONNECT
-/*C3*/SET SCHEMA PUBLIC
+/*C3*/DISCONNECT
+/*C4*/INSERT INTO USER VALUES(1,'johndoe@gmail.com','John','DOE','$2a$10$NpY8I9I5HCIpNL966MkSJexdyB/Sf3y2rzy.kHilFNYSblFwlOMnC','0772770845','USER_MANAGER')
+INSERT INTO MANAGER VALUES(1)
+ALTER SEQUENCE PUBLIC.USER_SEQ RESTART WITH 51
+COMMIT
+INSERT INTO USER VALUES(2,'setondjifabriceagbo@gmail.com','Setondji Fabrice','AGBO','$2a$10$SQ/t5ur1a9qOToIUtpKfmOdQ7W8Plcr.cWodBd9kQlyxt4TgN/.4e','+33 7 72 88 05 34','USER_CUSTOMER')
+INSERT INTO CUSTOMER VALUES(2)
+ALTER SEQUENCE PUBLIC.USER_SEQ RESTART WITH 101
+COMMIT
+DISCONNECT
+/*C5*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C6*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C7*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C8*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C2*/SET SCHEMA PUBLIC
 DISCONNECT
