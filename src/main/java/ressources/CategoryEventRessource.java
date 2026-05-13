@@ -4,6 +4,8 @@ package ressources;
 import dao.CategoryEventDao;
 import dto.CategoryEventDto;
 import entity.CategoryEvent;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
@@ -11,17 +13,20 @@ import jakarta.ws.rs.core.Response;
 
 import java.util.List;
 
+@Tag(name = "CategoryEvent", description = "Gestion des categories d'evernement")
 @Path("/api/categoryEvent")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class CategoryEventRessource {
     /**
-     * READ ALL : Récupérer toutes les catégories
-     * GET http://localhost:8080/votre-app/api/categories/all
+     * Récupérer toutes les catégories
      */
     @GET
     @Path("/all")
     @Produces(MediaType.APPLICATION_JSON)
+    @Operation(
+            summary = "Récupérer toutes les catégories"
+    )
     public Response getAllCategories() {
         CategoryEventDao dao = new CategoryEventDao();
         try {
@@ -36,11 +41,13 @@ public class CategoryEventRessource {
     }
 
     /**
-     * READ ONE : Récupérer une catégorie par son ID
-     * GET http://localhost:8080/votre-app/api/categories/1
+     * Récupérer une catégorie par son ID
      */
     @GET
     @Path("/{id}")
+    @Operation(
+            summary = "Récupérer une catégorie par son ID"
+    )
     @Produces(MediaType.APPLICATION_JSON)
     public Response getCategoryById(@PathParam("id") Long id) {
         CategoryEventDao dao = new CategoryEventDao();
@@ -60,11 +67,13 @@ public class CategoryEventRessource {
     }
 
     /**
-     * SEARCH : Chercher une catégorie par son nom exact
-     * GET http://localhost:8080/votre-app/api/categories/search?name=Concert
+     * Chercher une catégorie par son nom exact
      */
     @GET
     @Path("/search")
+    @Operation(
+            summary = "Chercher une catégorie par son nom exact"
+    )
     @Produces(MediaType.APPLICATION_JSON)
     public Response getCategoryByName(@QueryParam("name") String name) {
         if (name == null || name.trim().isEmpty()) {
@@ -90,11 +99,14 @@ public class CategoryEventRessource {
     }
 
     /**
-     * CREATE : Ajouter une nouvelle catégorie
-     * POST http://localhost:8080/votre-app/api/categories/add
+     * Ajouter une nouvelle catégorie
      */
+
     @POST
     @Path("/add")
+    @Operation(
+            summary = "Ajouter une nouvelle catégorie"
+    )
     @RolesAllowed("USER_ADMINISTRATOR")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -116,11 +128,13 @@ public class CategoryEventRessource {
 
 
     /**
-     * UPDATE : Modifier une catégorie existante
-     * PUT http://localhost:8080/votre-app/api/categories/update/1
+     * Modifier une catégorie existante
      */
     @PUT
     @Path("/update/{id}")
+    @Operation(
+            summary = "Modifier une catégorie existante"
+    )
     @RolesAllowed("USER_ADMINISTRATOR")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -148,11 +162,13 @@ public class CategoryEventRessource {
     }
 
     /**
-     * DELETE : Supprimer une catégorie
-     * DELETE http://localhost:8080/votre-app/api/categories/delete/1
+     * Supprimer une catégorie
      */
     @DELETE
     @Path("/delete/{id}")
+    @Operation(
+            summary = "Supprimer une catégorie"
+    )
     @RolesAllowed("USER_ADMINISTRATOR")
     @Produces(MediaType.APPLICATION_JSON)
     public Response deleteCategory(@PathParam("id") Long id) {

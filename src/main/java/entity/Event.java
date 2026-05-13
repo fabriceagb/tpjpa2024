@@ -48,6 +48,7 @@ public class Event  implements Serializable {
         this.label = label;
     }
 
+    @Column(name = "DESCRIPTION", nullable = false, length = 1000000)
     public String getDescription() {
         return description;
     }

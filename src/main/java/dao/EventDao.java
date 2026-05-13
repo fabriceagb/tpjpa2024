@@ -33,7 +33,7 @@ public class EventDao extends AbstractJpaDao<Long, Event> {
         try {
             // Le format "dd/MM/yyyy HH:mm" est utilisé pour parser la date et l'heure.
             SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-            formatter.setLenient(false); // Pour une validation stricte du format
+            formatter.setLenient(false);
             parsedDate = formatter.parse(eventDto.getDate());
         } catch (ParseException e) {
             throw new IllegalArgumentException("Format de date invalide pour '" + eventDto.getDate() + "'. Le format attendu est jj/MM/aaaa HH:mm.");
@@ -54,7 +54,7 @@ public class EventDao extends AbstractJpaDao<Long, Event> {
             event.setCategoryEvent(category);
             event.setDate(parsedDate);
             entityManager.persist(event);
-            
+
             transaction.commit();
             System.out.println("Événement créé avec succès.");
             return event;

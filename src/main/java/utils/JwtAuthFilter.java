@@ -21,12 +21,10 @@ public class JwtAuthFilter implements ContainerRequestFilter {
         String path = requestContext.getUriInfo().getPath();
         String method = requestContext.getMethod();
 
-        // 1. Autoriser les routes publiques (login, register)
         if (path.contains("login") || path.contains("register")) {
             return;
         }
 
-        // 2. Autoriser toutes les requêtes GET (swagger UI, openapi.json, events, catégories…)
         if (method.equals("GET")) {
             return;
         }
@@ -42,9 +40,7 @@ public class JwtAuthFilter implements ContainerRequestFilter {
 
         try {
             String email = JwtUtil.getEmailFromToken(token);
-            String role = JwtUtil.getRoleFromToken(token); // <-- Récupération du rôle
-
-            // 4. Injecter l'utilisateur dans le Contexte de Sécurité
+            String role = JwtUtil.getRoleFromToken(token);
             requestContext.setSecurityContext(new SecurityContext() {
                 @Override
                 public Principal getUserPrincipal() {
@@ -53,7 +49,6 @@ public class JwtAuthFilter implements ContainerRequestFilter {
 
                 @Override
                 public boolean isUserInRole(String expectedRole) {
-                    // C'EST ICI QUE LA MAGIE OPÈRE POUR @RolesAllowed
                     return expectedRole.equalsIgnoreCase(role);
                 }
 

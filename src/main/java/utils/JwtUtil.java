@@ -17,7 +17,6 @@ public class JwtUtil {
     // Durée de validité du token (ex: 2 heures = 7 200 000 ms)
     private static final long EXPIRATION_TIME = 7200000;
 
-    // NOUVEAU : On passe le rôle en paramètre lors de la création
     public static String generateToken(String email, String role) {
         return Jwts.builder()
                 .setSubject(email)
@@ -37,7 +36,6 @@ public class JwtUtil {
         return claims.getSubject();
     }
 
-    // NOUVELLE MÉTHODE : Extraire le rôle du token
     public static String getRoleFromToken(String token) {
         Claims claims = Jwts.parserBuilder()
                 .setSigningKey(SECRET_KEY)

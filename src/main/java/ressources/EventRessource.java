@@ -11,6 +11,8 @@ import entity.Event;
 import entity.Manager;
 import entity.Ticket;
 import entity.User;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
@@ -21,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Tag(name = "Event", description = "Gestion des evernement")
 @Path("/api/event")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
@@ -28,10 +31,12 @@ public class EventRessource {
 
     /**
      * Récupérer tous les événements
-     * GET http://localhost:8080/votre-app/api/event/all
      */
     @GET
     @Path("/all")
+    @Operation(
+            summary = "Récupérer tous les événements"
+    )
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllEvents() {
         EventDao dao = new EventDao();
@@ -48,10 +53,12 @@ public class EventRessource {
 
     /**
      * Récupérer un événement par son ID
-     * GET http://localhost:8080/votre-app/api/event/1
      */
     @GET
     @Path("/{id}")
+    @Operation(
+            summary = "Récupérer un événement par son ID"
+    )
     @Produces(MediaType.APPLICATION_JSON)
     public Response getEventById(@PathParam("id") Long id) {
         EventDao dao = new EventDao();
@@ -72,10 +79,12 @@ public class EventRessource {
 
     /**
      * Ajouter un nouvel événement
-     * POST http://localhost:8080/votre-app/api/event/add
      */
     @POST
     @Path("/add")
+    @Operation(
+            summary = "Ajouter un nouvel événement"
+    )
     @RolesAllowed("USER_MANAGER")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -115,10 +124,12 @@ public class EventRessource {
 
     /**
      * Supprimer un événement
-     * DELETE http://localhost:8080/votre-app/api/event/delete/1
      */
     @DELETE
     @Path("/delete/{id}")
+    @Operation(
+            summary = "Supprimer un événement par son id"
+    )
     @RolesAllowed({"USER_MANAGER", "USER_ADMINISTRATOR"})
     @Produces(MediaType.APPLICATION_JSON)
     public Response deleteEvent(@PathParam("id") Long id) {
@@ -144,10 +155,12 @@ public class EventRessource {
 
     /**
      * Mettre à jour un événement existant
-     * PUT http://localhost:8080/votre-app/api/event/update/1
      */
     @PUT
     @Path("/update/{id}")
+    @Operation(
+            summary = "Mettre à jour un événement existant par son id"
+    )
     @RolesAllowed("USER_MANAGER")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -179,10 +192,12 @@ public class EventRessource {
 
     /**
      * Récupérer les événements à venir
-     * GET http://localhost:8080/votre-app/api/event/upcoming
      */
     @GET
     @Path("/upcoming")
+    @Operation(
+            summary = "Récupérer les événements à venir"
+    )
     @Produces(MediaType.APPLICATION_JSON)
     public Response getUpcomingEvents() {
         EventDao dao = new EventDao();
@@ -195,11 +210,13 @@ public class EventRessource {
     }
 
     /**
-     * RECHERCHE : Chercher par mot-clé dans le titre/label
-     * GET http://localhost:8080/votre-app/api/event/search?label=Festival
+     * Chercher par mot-clé dans le titre/label
      */
     @GET
     @Path("/search")
+    @Operation(
+            summary = "Chercher par mot-clé dans le titre/label"
+    )
     @Produces(MediaType.APPLICATION_JSON)
     public Response searchEvents(@QueryParam("label") String labelKeyword) {
         if (labelKeyword == null || labelKeyword.trim().isEmpty()) {
@@ -217,10 +234,12 @@ public class EventRessource {
 
     /**
      * Événements par catégorie
-     * GET http://localhost:8080/votre-app/api/event/category/1
      */
     @GET
     @Path("/category/{categoryId}")
+    @Operation(
+            summary = "Événements par catégorie"
+    )
     @Produces(MediaType.APPLICATION_JSON)
     public Response getEventsByCategory(@PathParam("categoryId") Long categoryId) {
         EventDao dao = new EventDao();
@@ -234,9 +253,11 @@ public class EventRessource {
 
     /**
      * Événements par manager
-     * GET http://localhost:8080/votre-app/api/event/manager/1
      */
     @GET
+    @Operation(
+            summary = "Événements par manager"
+    )
     @Path("/manager/{managerId}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getEventsByManager(@PathParam("managerId") Long managerId) {
@@ -251,9 +272,11 @@ public class EventRessource {
 
     /**
      * Événements par lieu (Requête nommée)
-     * GET http://localhost:8080/votre-app/api/event/location/Paris
      */
     @GET
+    @Operation(
+            summary = "Événements par lieu"
+    )
     @Path("/location/{location}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getEventsByLocation(@PathParam("location") String location) {
@@ -268,10 +291,12 @@ public class EventRessource {
 
     /**
      *  Événements par fourchette de prix (Requête JPQL)
-     * GET http://localhost:8080/votre-app/api/event/price?min=10&max=50
      */
     @GET
     @Path("/price")
+    @Operation(
+            summary = "Événements par fourchette de prix"
+    )
     @Produces(MediaType.APPLICATION_JSON)
     public Response getEventsByPriceRange(@QueryParam("min") Double min, @QueryParam("max") Double max) {
         if (min == null) min = 0.0;
@@ -287,8 +312,10 @@ public class EventRessource {
 
     /**
      * Acheter un billet pour un événement
-     * POST http://localhost:8080/api/event/{id}/buy
      */
+    @Operation(
+            summary = "Acheter un billet pour un événement"
+    )
     @POST
     @Path("/{id}/buy")
     @RolesAllowed("USER_CUSTOMER")
@@ -355,10 +382,12 @@ public class EventRessource {
 
     /**
      * Annuler un événement (pose le flag cancelled=true, ne supprime pas)
-     * POST http://localhost:8080/votre-app/api/event/cancel/1
      */
     @POST
     @Path("/cancel/{id}")
+    @Operation(
+            summary = "Annuler un événement"
+    )
     @RolesAllowed({"USER_MANAGER", "USER_ADMINISTRATOR"})
     @Produces(MediaType.APPLICATION_JSON)
     public Response cancelEvent(@PathParam("id") Long id) {

@@ -10,6 +10,8 @@ import entity.Customer;
 import entity.Manager;
 import entity.Administrator;
 import entity.User;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
@@ -19,14 +21,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.JwtUtil;
 
-
+@Tag(name = "User", description = "Gestion des utilisateurs")
 @Path("/api/user")
 @Produces({"application/json", "application/xml"})
 public class UserRessource {
     private static final Logger log = LoggerFactory.getLogger(UserRessource.class);
 
+
     @POST
     @Path("/register")
+    @Operation(
+            summary = "Inscription d'un nouvel utilisateur"
+    )
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response addUser(UserDto request){
@@ -90,6 +96,9 @@ public class UserRessource {
 
     @POST
     @Path("/login")
+    @Operation(
+            summary = "Connexion d'un utilisateur par son email et son mot de passe"
+    )
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response login(LoginDto request) {
@@ -138,6 +147,9 @@ public class UserRessource {
 
     @POST
     @Path("/update")
+    @Operation(
+            summary = "Modification des informations d'un utilisateur"
+    )
     @RolesAllowed({"USER_CUSTOMER", "USER_MANAGER", "USER_ADMINISTRATOR"})
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
