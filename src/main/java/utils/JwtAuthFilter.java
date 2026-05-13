@@ -19,14 +19,15 @@ public class JwtAuthFilter implements ContainerRequestFilter {
     public void filter(ContainerRequestContext requestContext) {
 
         String path = requestContext.getUriInfo().getPath();
+        String method = requestContext.getMethod();
 
-        // 1. Autoriser les routes publiques (Authentification et Swagger)
-        if (path.contains("login") || path.contains("register") || path.contains("swagger")) {
+        // 1. Autoriser les routes publiques (login, register)
+        if (path.contains("login") || path.contains("register")) {
             return;
         }
-        
-        // 2. Autoriser la lecture publique (GET) des événements et catégories
-        if (requestContext.getMethod().equals("GET") && (path.contains("event") || path.contains("categoryEvent"))) {
+
+        // 2. Autoriser toutes les requêtes GET (swagger UI, openapi.json, events, catégories…)
+        if (method.equals("GET")) {
             return;
         }
 

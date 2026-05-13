@@ -42,7 +42,7 @@ public class UserDao extends AbstractJpaDao<Long, User> {
         EntityTransaction transaction = this.entityManager.getTransaction();
 
         try{
-            // Identification de l'utilisateur
+            transaction.begin();
             User user = this.findByEmail(email);
             user.setEmail(updateUser.getEmail());
             user.setFirstName(updateUser.getFirstName());
