@@ -10,7 +10,9 @@ import java.util.Date;
 public class JwtUtil {
 
 
-    private static final Key SECRET_KEY = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+    private static final Key SECRET_KEY = Keys.hmacShaKeyFor(
+        "tpjpa2024-secret-key-events-application-2024".getBytes()
+    );
 
     // Durée de validité du token (ex: 2 heures = 7 200 000 ms)
     private static final long EXPIRATION_TIME = 7200000;

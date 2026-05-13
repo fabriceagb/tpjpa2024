@@ -112,6 +112,7 @@ public class UserRessource {
 
                 String token = JwtUtil.generateToken(user.getEmail(),  user.getRole());
                 LoginResponseDto loginResponseDto  = new LoginResponseDto();
+                loginResponseDto.setId(user.getId());
                 loginResponseDto.setToken(token);
                 loginResponseDto.setEmail(user.getEmail());
                 loginResponseDto.setFirstName(user.getFirstName());
@@ -158,7 +159,6 @@ public class UserRessource {
             User updated = userDao.findByEmail(
                 request.getEmail() != null ? request.getEmail() : email
             );
-            if (updated != null) updated.setPassword(null);
             return Response.ok(updated).build();
 
         } catch (Exception e) {

@@ -1,6 +1,7 @@
 package dto;
 
 public class LoginResponseDto {
+    public Long id;
     public String token;
     public String email;
     public String firstName;
@@ -8,6 +9,9 @@ public class LoginResponseDto {
     public String role;
     public String phone;
 
+
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
     public String getToken() {
         return token;
