@@ -109,7 +109,6 @@ public class UserRessource {
 
             if (isPasswordValid) {
 
-                user.setPassword(null);
                 String token = JwtUtil.generateToken(user.getEmail(),  user.getRole());
                 LoginResponseDto responseDto = new LoginResponseDto(token, user);
 

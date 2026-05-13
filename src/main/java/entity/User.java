@@ -1,5 +1,6 @@
 package entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
@@ -46,6 +47,7 @@ public class User implements Serializable {
     public void setEmail(String email) {
         this.email = email;
     }
+    @JsonIgnore
     public String getPassword() {
         return password;
     }
