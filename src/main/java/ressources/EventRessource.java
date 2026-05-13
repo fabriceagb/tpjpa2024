@@ -3,15 +3,21 @@ package ressources;
 import dao.CategoryEventDao;
 import dao.EventDao;
 import dao.ManagerDao;
+import dao.TicketDao;
+import dao.UserDao;
 import dto.EventDto;
 import dto.UpdateEventDto;
 import entity.CategoryEvent;
 import entity.Event;
 import entity.Manager;
+import entity.Ticket;
+import entity.User;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.SecurityContext;
 
 import java.util.List;
 
@@ -277,6 +283,46 @@ public class EventRessource {
             return Response.ok(events).build();
         } catch (Exception e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    /**
+     * Acheter un billet pour un événement
+     * POST http://localhost:8080/api/event/{id}/buy
+     */
+    @POST
+    @Path("/{id}/buy")
+    @RolesAllowed("USER_CUSTOMER")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response buyTicket(@PathParam("id") Long eventId, @Context SecurityContext securityContext) {
+        try {
+            String email = securityContext.getUserPrincipal().getName();
+
+            UserDao userDao = new UserDao();
+            User user = userDao.findByEmail(email);
+            if (user == null) {
+                return Response.status(Response.Status.NOT_FOUND)
+                        .entity("{\"error\": \"Utilisateur introuvable.\"}")
+                        .build();
+            }
+
+            TicketDao ticketDao = new TicketDao();
+            Ticket ticket = ticketDao.buyTicket(eventId, user.getId());
+            return Response.status(Response.Status.CREATED).entity(ticket).build();
+
+        } catch (IllegalArgumentException e) {
+            return Response.status(Response.Status.NOT_FOUND)
+                    .entity("{\"error\": \"" + e.getMessage() + "\"}")
+                    .build();
+        } catch (IllegalStateException e) {
+            return Response.status(Response.Status.CONFLICT)
+                    .entity("{\"error\": \"" + e.getMessage() + "\"}")
+                    .build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("{\"error\": \"Erreur lors de l'achat du billet.\"}")
+                    .build();
         }
     }
 
